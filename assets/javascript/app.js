@@ -1,11 +1,4 @@
 $(document).ready(function () {
-    var inf = {
-        employe: '',
-        role: '',
-        date: '',
-        Month: '',
-        rate: 0
-    }
 
     // Initialize Firebase
     var config = {
@@ -18,27 +11,52 @@ $(document).ready(function () {
     };
     firebase.initializeApp(config);
 
+    // Create a variable to reference the database
     var database = firebase.database();
 
     $('#button').on('click', function () {
         event.preventDefault();
-        inf.employe = $('#name').val().trim();
-        inf.role = $('#role').val().trim();
-        inf.date = $('#date').val().trim();
-        inf.rate = $('#rate').val().trim();
-        // inf.Month = -(moment(inf.date, "MM/DD/YYYY").diff(moment().format('L'), 'Months'));
-        database.ref().push(inf);
-        var tr = $('<tr>');
-        $.each(inf, function (key, value) {
-            tr.append('<td>' + value + '</td>');
-            console.log(value);
-        });
-        // tr.append(inf.Month * inf.rate);
-        $("#tableAdd").append(tr);
+
+        // Grabs user input
+        var tName = $("#name").val().trim();
+        var tDestination = $("#destination").val().trim();
+        var tTime = $("#time").val().trim();
+        var tFrequency = $("#frequency").val().trim();
+
+        // Creates local "temporary" object for holding employee data
+        var trainValues = {
+
+            name: tName,
+            destination: tDestination,
+            time: tTime,
+            frequency: tFrequency,
+
+        };
+
+        // Push new values to the database
+        database.ref().push(trainValues);
+
     });
 
+    database.ref().on("child_added", function (childSnapshot) {
+        console.log(childSnapshot.val());
+
+        var getData = childSnapshot.val();
+
+        var tName = getData.name;
+        var tDestination = getData.destination;
+        var tTime = getData.time;
+        var tFrequency = getData.frequency;
+
+        console.log(tName);
+        console.log(tDestination);
+        console.log(tTime);
+        console.log(tFrequency);
+
+        $("#tableAdd").append("<tr><td>" + tName + "</td><td>" + tDestination + "</td><td>" + tTime + "</td><td>" + tFrequency + "</td></tr>");
 
 
+    });
 
 
 
