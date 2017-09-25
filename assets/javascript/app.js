@@ -38,28 +38,42 @@ $(document).ready(function () {
 
     });
 
+    // Create a listener for value changes in the database
     database.ref().on("child_added", function (childSnapshot) {
-        console.log(childSnapshot.val());
 
+        // Snapshot of the current database
         var getData = childSnapshot.val();
 
+        // User input data
         var tName = getData.name;
         var tDestination = getData.destination;
-        var tTime = getData.time;
         var tFrequency = getData.frequency;
+        var tTime = getData.time;
 
-        console.log(tName);
-        console.log(tDestination);
-        console.log(tTime);
-        console.log(tFrequency);
+        // First Time (pushed back 1 year to make sure it comes before current time)
+        var firstTimeConverted = moment(tTime, "hh:mm").subtract(1, "years");
 
-        $("#tableAdd").append("<tr><td>" + tName + "</td><td>" + tDestination + "</td><td>" + tTime + "</td><td>" + tFrequency + "</td></tr>");
+        // Current time
+        var currentTime = moment();
+        var timeFormatted = moment(currentTime).format("hh:mm")
 
+        // Difference between the times
+        var diffTime = moment().diff(moment(firstTimeConverted), "minutes");
+
+        // Time apart (remainder)
+        var tRemainder = diffTime % tFrequency;
+
+        // Minutes until train
+        var minutesAway = tFrequency - tRemainder;
+
+        // Next train
+        var nextTrain = moment().add(minutesAway, "minutes");
+        var tArrivalTime = moment(nextTrain).format("hh:mm");
+
+        // Append all the values to the table in the HTML
+        $("#tableAdd").append("<tr><td>" + tName + "</td><td>" + tDestination + "</td><td>" + tFrequency + "</td><td>" + tArrivalTime + "</td><td>" + minutesAway + "</td></tr>");
 
     });
-
-
-
 
 
 
