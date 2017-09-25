@@ -74,7 +74,7 @@ $(document).ready(function () {
 
         // Next train
         var nextTrain = moment().add(minutesAway, "minutes");
-        var tArrivalTime = moment(nextTrain).format("hh:mm");
+        var tArrivalTime = moment(nextTrain).format("hh:mm A");
 
         // Append all the values to the table in the HTML
         $("#tableAdd").append("<tr><td>" + tName + "</td><td>" + tDestination + "</td><td>" + tFrequency + "</td><td>" + tArrivalTime + "</td><td>" + minutesAway + "</td></tr>");
