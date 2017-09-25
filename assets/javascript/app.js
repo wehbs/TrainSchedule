@@ -36,6 +36,12 @@ $(document).ready(function () {
         // Push new values to the database
         database.ref().push(trainValues);
 
+        // Clear out text fields after submit
+        $("#name").val("");
+        $("#destination").val("");
+        $("#time").val("");
+        $("#frequency").val("");
+
     });
 
     // Create a listener for value changes in the database
